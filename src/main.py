@@ -159,8 +159,8 @@ def generate_sheet(
     ws = wb.active
     ws.title = "Priklady"
 
-    # Stylovani
-    font = Font(name="Calibri", size=16)
+    # Stylovani - pouzijeme monospace font pro spravne zarovnani
+    font = Font(name="Courier New", size=14)
     align_left = Alignment(horizontal="left", vertical="center")
 
     # Hlavicka / titulek
@@ -181,18 +181,18 @@ def generate_sheet(
     # Vypocet potrebneho poctu radku
     rows_needed = math.ceil(count / cols)
 
-    # Zapsani prikladu do buniek podle fill_mode
+    # Rozdeleni prikladu do sloupcu pro zjisteni max delky v kazdem sloupci
+    # Nejprve vytvorime 2D strukturu prikladu podle fill_mode
+    grid = [[None for _ in range(cols)] for _ in range(rows_needed)]
     idx = 0
+
     if fill_mode == "down":
-        # Column-major: plneni po sloupcich (vhodne pro tisk)
+        # Column-major: plneni po sloupcich
         for c in range(cols):
             for r in range(rows_needed):
                 if idx >= count:
                     break
-                cell = ws.cell(row=start_row + r, column=1 + c)
-                cell.value = problems[idx]
-                cell.font = font
-                cell.alignment = align_left
+                grid[r][c] = problems[idx]
                 idx += 1
     else:  # across
         # Row-major: plneni po radcich
@@ -200,11 +200,37 @@ def generate_sheet(
             for c in range(cols):
                 if idx >= count:
                     break
+                grid[r][c] = problems[idx]
+                idx += 1
+
+    # Najdeme maximalni delku leve casti (pred "= ___") v kazdem sloupci
+    max_lens = [0] * cols
+    for c in range(cols):
+        for r in range(rows_needed):
+            if grid[r][c] is not None:
+                # Ziskame cast pred "= ___"
+                left_part = grid[r][c].split(" = ")[0]
+                max_lens[c] = max(max_lens[c], len(left_part))
+
+    # Zarovname priklady v kazdem sloupci podle nejdelsiho
+    # Mezery budou na zacatku pro zarovnani k "="
+    for c in range(cols):
+        for r in range(rows_needed):
+            if grid[r][c] is not None:
+                parts = grid[r][c].split(" = ")
+                left_part = parts[0]
+                # Pridame mezery na zacatek pro zarovnani zprava
+                padding = max_lens[c] - len(left_part)
+                grid[r][c] = " " * padding + left_part + " = ___"
+
+    # Zapsani zarovnanych prikladu do buniek
+    for r in range(rows_needed):
+        for c in range(cols):
+            if grid[r][c] is not None:
                 cell = ws.cell(row=start_row + r, column=1 + c)
-                cell.value = problems[idx]
+                cell.value = grid[r][c]
                 cell.font = font
                 cell.alignment = align_left
-                idx += 1
 
     # Nastaveni jednotne sirky sloupcu (cca 200 px)
     EXCEL_WIDTH = 29

@@ -21,7 +21,7 @@ class MathGeneratorGUI:
             root: Korenovy tkinter widget
         """
         self.root = root
-        self.root.title("Generator matematickych prikladu")
+        self.root.title("Generátor matematických příkladů")
         self.root.geometry("600x550")
         self.root.resizable(False, False)
 
@@ -32,8 +32,8 @@ class MathGeneratorGUI:
         # Titulek aplikace
         title_label = ttk.Label(
             main_frame,
-            text="Generator matematickych prikladu",
-            font=("Arial", 16, "bold")
+            text="Generátor matematických příkladů",
+            font=("Arial", 16, "bold"),
         )
         title_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
 
@@ -53,23 +53,23 @@ class MathGeneratorGUI:
         self.op_mul = tk.BooleanVar(value=True)
         self.op_div = tk.BooleanVar(value=True)
 
-        ttk.Checkbutton(ops_frame, text="Scitani (+)", variable=self.op_add).grid(
+        ttk.Checkbutton(ops_frame, text="Sčítání (+)", variable=self.op_add).grid(
             row=0, column=0, sticky=tk.W, padx=(0, 20)
         )
-        ttk.Checkbutton(ops_frame, text="Odcitani (-)", variable=self.op_sub).grid(
+        ttk.Checkbutton(ops_frame, text="Odčítání (-)", variable=self.op_sub).grid(
             row=0, column=1, sticky=tk.W, padx=(0, 20)
         )
-        ttk.Checkbutton(ops_frame, text="Nasobeni (x)", variable=self.op_mul).grid(
+        ttk.Checkbutton(ops_frame, text="Násobení (x)", variable=self.op_mul).grid(
             row=1, column=0, sticky=tk.W, padx=(0, 20), pady=(5, 0)
         )
-        ttk.Checkbutton(ops_frame, text="Deleni (/)", variable=self.op_div).grid(
+        ttk.Checkbutton(ops_frame, text="Dělení (/)", variable=self.op_div).grid(
             row=1, column=1, sticky=tk.W, pady=(5, 0)
         )
 
         row += 2
 
         # Maximalni vysledek
-        ttk.Label(main_frame, text="Maximalni vysledek:").grid(
+        ttk.Label(main_frame, text="Maximalní výsledek:").grid(
             row=row, column=0, sticky=tk.W, pady=(0, 10)
         )
         self.max_result = tk.IntVar(value=20)
@@ -80,7 +80,7 @@ class MathGeneratorGUI:
         row += 1
 
         # Pocet prikladu
-        ttk.Label(main_frame, text="Pocet prikladu:").grid(
+        ttk.Label(main_frame, text="Počet příkladů:").grid(
             row=row, column=0, sticky=tk.W, pady=(0, 10)
         )
         self.count = tk.IntVar(value=78)
@@ -91,7 +91,7 @@ class MathGeneratorGUI:
         row += 1
 
         # Pocet sloupcu
-        ttk.Label(main_frame, text="Pocet sloupcu:").grid(
+        ttk.Label(main_frame, text="Počet sloupců:").grid(
             row=row, column=0, sticky=tk.W, pady=(0, 10)
         )
         self.cols = tk.IntVar(value=3)
@@ -102,17 +102,17 @@ class MathGeneratorGUI:
         row += 1
 
         # Zpusob vyplnovani
-        ttk.Label(main_frame, text="Zpusob vyplnovani:").grid(
+        ttk.Label(main_frame, text="Způsob vyplňování:").grid(
             row=row, column=0, sticky=tk.W, pady=(0, 10)
         )
         self.fill_mode = tk.StringVar(value="down")
         fill_frame = ttk.Frame(main_frame)
         fill_frame.grid(row=row, column=1, sticky=tk.W, pady=(0, 10))
         ttk.Radiobutton(
-            fill_frame, text="Po sloupcich", variable=self.fill_mode, value="down"
+            fill_frame, text="Po sloupcích", variable=self.fill_mode, value="down"
         ).grid(row=0, column=0, sticky=tk.W, padx=(0, 15))
         ttk.Radiobutton(
-            fill_frame, text="Po radcich", variable=self.fill_mode, value="across"
+            fill_frame, text="Po řádcích", variable=self.fill_mode, value="across"
         ).grid(row=0, column=1, sticky=tk.W)
         row += 1
 
@@ -120,13 +120,13 @@ class MathGeneratorGUI:
         ttk.Label(main_frame, text="Titulek:").grid(
             row=row, column=0, sticky=tk.W, pady=(0, 10)
         )
-        self.title_text = tk.StringVar(value="Matematicke priklady")
+        self.title_text = tk.StringVar(value="Matematické příklady")
         title_entry = ttk.Entry(main_frame, textvariable=self.title_text, width=35)
         title_entry.grid(row=row, column=1, sticky=tk.W, pady=(0, 10))
         row += 1
 
         # Seed (volitelny)
-        ttk.Label(main_frame, text="Seed (volitelny):").grid(
+        ttk.Label(main_frame, text="Seed (volitelné):").grid(
             row=row, column=0, sticky=tk.W, pady=(0, 10)
         )
         self.seed = tk.StringVar(value="")
@@ -134,14 +134,14 @@ class MathGeneratorGUI:
         seed_entry.grid(row=row, column=1, sticky=tk.W, pady=(0, 10))
         ttk.Label(
             main_frame,
-            text="(ponechte prazdne pro nahodne generovani)",
+            text="(ponechte prázdné pro náhodné generovaní)",
             font=("Arial", 8),
             foreground="gray"
         ).grid(row=row+1, column=1, sticky=tk.W, pady=(0, 10))
         row += 2
 
         # Vystupni soubor
-        ttk.Label(main_frame, text="Vystupni soubor:").grid(
+        ttk.Label(main_frame, text="Výstupní soubor:").grid(
             row=row, column=0, sticky=tk.W, pady=(0, 15)
         )
         file_frame = ttk.Frame(main_frame)
@@ -152,7 +152,7 @@ class MathGeneratorGUI:
         file_entry.grid(row=0, column=0, sticky=tk.W)
 
         browse_button = ttk.Button(
-            file_frame, text="Prochazet...", command=self.browse_file, width=12
+            file_frame, text="Procházet...", command=self.browse_file, width=12
         )
         browse_button.grid(row=0, column=1, sticky=tk.W, padx=(5, 0))
         row += 1
@@ -160,7 +160,7 @@ class MathGeneratorGUI:
         # Tlacitko Generovat
         generate_button = ttk.Button(
             main_frame,
-            text="Generovat priklady",
+            text="Generovat příklady",
             command=self.generate,
             width=30
         )
@@ -173,7 +173,7 @@ class MathGeneratorGUI:
         """Otevre dialog pro vyber umisteni souboru."""
         filename = filedialog.asksaveasfilename(
             defaultextension=".xlsx",
-            filetypes=[("Excel soubory", "*.xlsx"), ("Vsechny soubory", "*.*")],
+            filetypes=[("Excel soubory", "*.xlsx"), ("Všechny soubory", "*.*")],
             initialfile=self.output_file.get()
         )
         if filename:
@@ -205,23 +205,23 @@ class MathGeneratorGUI:
             True pokud jsou vstupy validni, False jinak
         """
         if not ops:
-            messagebox.showerror("Chyba", "Musite vybrat alespon jednu operaci!")
+            messagebox.showerror("Chyba", "Musíte vybrat alespoň jednu operaci!")
             return False
 
         if max_result < 1:
-            messagebox.showerror("Chyba", "Maximalni vysledek musi byt alespon 1!")
+            messagebox.showerror("Chyba", "Maximální výsledek musí být alespoň 1!")
             return False
 
         if count < 1:
-            messagebox.showerror("Chyba", "Pocet prikladu musi byt alespon 1!")
+            messagebox.showerror("Chyba", "Počet příkladů musí být alespoň 1!")
             return False
 
         if cols < 1:
-            messagebox.showerror("Chyba", "Pocet sloupcu musi byt alespon 1!")
+            messagebox.showerror("Chyba", "Počet sloupců musí být alespoň 1!")
             return False
 
         if not output_file:
-            messagebox.showerror("Chyba", "Musite zadat vystupni soubor!")
+            messagebox.showerror("Chyba", "Musíte zadat výstupní soubor!")
             return False
 
         return True
@@ -238,7 +238,7 @@ class MathGeneratorGUI:
                 try:
                     seed_value = int(self.seed.get().strip())
                 except ValueError:
-                    messagebox.showerror("Chyba", "Seed musi byt cele cislo!")
+                    messagebox.showerror("Chyba", "Seed musí být celé číslo!")
                     return
 
             # Ziskani ostatnich hodnot
@@ -268,15 +268,15 @@ class MathGeneratorGUI:
             # Zobrazeni uspesne zpravy
             messagebox.showinfo(
                 "Hotovo",
-                f"Priklady byly uspesne vygenerovany!\n\nSoubor: {file_path}"
+                f"Příklady byly úspěšně vygenerovány!\n\nSoubor: {file_path}"
             )
 
             # Nabidka otevreni souboru
-            if messagebox.askyesno("Otevrit soubor?", "Chcete soubor otevrit?"):
+            if messagebox.askyesno("Otevřít soubor?", "Chcete soubor otevřít?"):
                 self.open_file(file_path)
 
         except Exception as e:
-            messagebox.showerror("Chyba", f"Nastala chyba pri generovani:\n{str(e)}")
+            messagebox.showerror("Chyba", f"Nastala chyba při generování:\n{str(e)}")
 
     def open_file(self, file_path):
         """
@@ -295,8 +295,8 @@ class MathGeneratorGUI:
                     subprocess.call(['xdg-open', file_path])
         except Exception as e:
             messagebox.showwarning(
-                "Upozorneni",
-                f"Nepodarilo se otevrit soubor:\n{str(e)}\n\nSoubor najdete v: {file_path}"
+                "Upozornění",
+                f"Nepodařilo se otevřít soubor:\n{str(e)}\n\nSoubor najdete v: {file_path}"
             )
 
 
