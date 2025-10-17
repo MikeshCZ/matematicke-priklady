@@ -27,7 +27,7 @@ pip install -r requirements.txt
 ### GUI aplikace (doporučeno)
 
 ```bash
-python src/gui.py
+python src/main.py --gui
 ```
 
 GUI nabízí:

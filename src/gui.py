@@ -7,7 +7,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
 import subprocess
-from main import generate_sheet
+from cli import generate_sheet
 
 
 class MathGeneratorGUI:
@@ -24,6 +24,9 @@ class MathGeneratorGUI:
         self.root.title("Generátor matematických příkladů")
         self.root.geometry("600x550")
         self.root.resizable(False, False)
+
+        # Vycentrovani okna na obrazovce
+        self._center_window()
 
         # Vytvoreni hlavniho framu s paddingem
         main_frame = ttk.Frame(root, padding="20")
@@ -168,6 +171,25 @@ class MathGeneratorGUI:
 
         # Konfigurace gridu pro roztahovani
         main_frame.columnconfigure(1, weight=1)
+
+    def _center_window(self):
+        """Vycentruje okno na stredu obrazovky."""
+        self.root.update_idletasks()
+
+        # Ziskani rozmeru okna
+        window_width = self.root.winfo_width()
+        window_height = self.root.winfo_height()
+
+        # Ziskani rozmeru obrazovky
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+
+        # Vypocet pozice pro vycentrovani
+        x = (screen_width // 2) - (window_width // 2)
+        y = (screen_height // 2) - (window_height // 2)
+
+        # Nastaveni pozice okna
+        self.root.geometry(f"+{x}+{y}")
 
     def browse_file(self):
         """Otevre dialog pro vyber umisteni souboru."""

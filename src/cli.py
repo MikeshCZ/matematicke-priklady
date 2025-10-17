@@ -269,7 +269,7 @@ def parse_args():
     p = argparse.ArgumentParser(
         prog="python src/main.py",
         description="Generator matematickych prikladu do Excel souboru (.xlsx)",
-        epilog="Pro GUI rozhrani pouzijte: python src/gui.py",
+        epilog="Pro GUI rozhrani pouzijte: python src/main.py --gui",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
