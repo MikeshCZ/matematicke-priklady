@@ -160,7 +160,7 @@ def generate_sheet(
     ws.title = "Priklady"
 
     # Stylovani - pouzijeme monospace font pro spravne zarovnani
-    font = Font(name="Courier New", size=14)
+    font = Font(name="Consolas", size=16)
     align_left = Alignment(horizontal="left", vertical="center")
 
     # Hlavicka / titulek
@@ -241,6 +241,15 @@ def generate_sheet(
     ROW_HEIGHT = 24
     for r in range(start_row, start_row + rows_needed):
         ws.row_dimensions[r].height = ROW_HEIGHT
+
+    # Nastaveni uzkych okraju (narrow margins) pro tisk
+    # Hodnoty jsou v palcich
+    ws.page_margins.left = 0.25
+    ws.page_margins.right = 0.25
+    ws.page_margins.top = 0.75
+    ws.page_margins.bottom = 0.75
+    ws.page_margins.header = 0.3
+    ws.page_margins.footer = 0.3
 
     # Ulozeni souboru
     wb.save(file_name)

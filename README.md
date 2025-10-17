@@ -82,7 +82,7 @@ python src/main.py --out moje_priklady.xlsx
 ## Příklady výstupu
 
 Aplikace generuje profesionálně naformátované Excel soubory s:
-- Čitelným fontem Courier New (velikost 14, monospace)
+- Čitelným fontem Consolas (velikost 16, monospace)
 - Jednotnou šířkou sloupců (cca 200px)
 - Optimální výškou řádků (24)
 - Volitelným titulkem (velikost 18, tučně)
