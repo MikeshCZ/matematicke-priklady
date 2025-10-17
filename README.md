@@ -79,6 +79,25 @@ python src/main.py --out moje_priklady.xlsx
 | `--seed CISLO` | Seed pro reprodukovatelné generování (stejné číslo = stejné příklady) | náhodný |
 | `--out SOUBOR` | Název výstupního .xlsx souboru | `"priklady.xlsx"` |
 
+## Buildování aplikace
+
+### macOS
+
+Pro vytvoření standalone .app bundle:
+
+```bash
+./build_scripts/build_mac.sh
+```
+
+Výsledná aplikace bude v adresáři `dist/`. Build script:
+- Automaticky zkontroluje a nainstaluje PyInstaller
+- Vytvoří GUI aplikaci bez terminálového okna
+- Použije konfiguraci z `gui.spec`
+
+### Požadavky pro build
+- PyInstaller (`pip install pyinstaller`)
+- Všechny závislosti z `requirements.txt`
+
 ## Příklady výstupu
 
 Aplikace generuje profesionálně naformátované Excel soubory s:
@@ -87,6 +106,7 @@ Aplikace generuje profesionálně naformátované Excel soubory s:
 - Optimální výškou řádků (24)
 - Volitelným titulkem (velikost 18, tučně)
 - **Zarovnanými příklady** - všechny "=" jsou v každém sloupci pod sebou
+- Úzkými okraji (0.25" po stranách, 0.75" nahoře/dole) pro optimální tisk
 
 Formát příkladu: `a op b = ___`
 
@@ -103,6 +123,29 @@ Příklad (zarovnané):
 - Python 3.x
 - openpyxl (pro generování Excel souborů)
 - tkinter (zabudováno v Pythonu, pro GUI)
+
+## Architektura projektu
+
+Projekt se skládá ze tří hlavních modulů:
+
+- **`src/main.py`** - Vstupní bod aplikace, směruje na CLI nebo GUI podle parametru `--gui`
+- **`src/cli.py`** - Obsahuje veškerou jádrovou logiku:
+  - Generátory příkladů (`gen_add`, `gen_sub`, `gen_mul`, `gen_div`)
+  - Funkci `generate_sheet()` pro vytváření Excel souborů
+  - CLI rozhraní pomocí argparse
+- **`src/gui.py`** - GUI wrapper postavený na tkinter, který využívá `generate_sheet()` z `cli.py`
+
+### Hlavní vlastnosti implementace
+
+- **Zarovnávací algoritmus**: Příklady v každém sloupci jsou zarovnány doprava přidáním mezer, aby všechny znaky "=" byly pod sebou (využívá monospace font Consolas)
+- **Matematická validita**:
+  - Odčítání: vždy `a >= b` pro nezáporné výsledky
+  - Dělení: výsledek vždy celé číslo (konstrukce `a = b * c`)
+  - Sčítání/násobení: respektuje `max_result`
+- **Strategie násobení**: Kandidátní přístup pro rovnoměrné rozložení operandů
+- **Režimy vyplňování**:
+  - `down` - po sloupcích (svisle)
+  - `across` - po řádcích (vodorovně)
 
 ## Licence
 
