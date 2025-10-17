@@ -1,104 +1,113 @@
-# Generator matematickych prikladu
+# Generátor matematických příkladů
 
-Aplikace pro generovani matematickych prikladu do Excel souboru. Idealni pro ucitele a rodice, kteri potrebuji rychle vytvorit cviceni pro deti.
+Aplikace pro generování matematických příkladů do Excel souboru. Ideální pro učitele a rodiče, kteří potřebují rychle vytvořit cvičení pro děti.
 
 ## Funkce
 
-- **Vicero operaci**: Scitani, odcitani, nasobeni, deleni
-- **Nastavitelna obtiznost**: Maximalni vysledek od 1 do 1000
-- **Flexibilni rozlozeni**: 1-10 sloupcu, vyplnovani po sloupcich nebo po radcich
-- **Reprodukovatelnost**: Volitelny seed pro vytvoreni identickych listu
-- **Graficke rozhrani**: Intuitivni GUI aplikace
-- **CLI rozhrani**: Pro pokrocile uzivatele a automatizaci
+- **Vícero operací**: Sčítání, odčítání, násobení, dělení
+- **Nastavitelná obtížnost**: Maximální výsledek od 1 do 1000
+- **Flexibilní rozvržení**: 1-10 sloupců, vyplňování po sloupcích nebo po řádcích
+- **Reprodukovatelnost**: Volitelný seed pro vytvoření identických listů
+- **Grafické rozhraní**: Intuitivní GUI aplikace
+- **CLI rozhraní**: Pro pokročilé uživatele a automatizaci
 
 ## Instalace
 
 ```bash
-# Klonovani repozitare
+# Klonování repozitáře
 git clone https://github.com/uzivatel/matematicke-priklady.git
 cd matematicke-priklady
 
-# Instalace zavislosti
+# Instalace závislostí
 pip install -r requirements.txt
 ```
 
-## Pouziti
+## Použití
 
-### GUI aplikace (doporuceno)
+### GUI aplikace (doporučeno)
 
 ```bash
 python src/gui.py
 ```
 
-GUI nabizi:
-- Vyber operaci pomoci checkboxu
-- Nastaveni maximalniho vysledku (1-1000)
-- Pocet prikladu (1-500)
-- Pocet sloupcu (1-10)
-- Zpusob vyplnovani (po sloupcich/radcich)
-- Vlastni titulek
-- Volitelny seed pro reprodukovatelnost
-- Prochazeni souboru pro vyber umisteni
+GUI nabízí:
+- Výběr operací pomocí checkboxů
+- Nastavení maximálního výsledku (1-1000)
+- Počet příkladů (1-500)
+- Počet sloupců (1-10)
+- Způsob vyplňování (po sloupcích/řádcích)
+- Vlastní titulek
+- Volitelný seed pro reprodukovatelnost
+- Procházení souborů pro výběr umístění
 
 ### CLI aplikace
 
 ```bash
-# Napoveda - zobrazeni vsech dostupnych argumentu
+# Nápověda - zobrazení všech dostupných argumentů
 python src/main.py --help
 
-# Zakladni pouziti (vychozi nastaveni)
+# Základní použití (výchozí nastavení)
 python src/main.py
 
-# Pouze scitani a odcitani, max vysledek 10
+# Pouze sčítání a odčítání, max výsledek 10
 python src/main.py --ops "+-" --max 10
 
-# 50 prikladu s nasobenim, 2 sloupce
+# 50 příkladů s násobením, 2 sloupce
 python src/main.py --ops "*" --count 50 --cols 2
 
-# S vlastnim titulkem a seedem
-python src/main.py --title "Cviceni 1" --seed 42
+# S vlastním titulkem a seedem
+python src/main.py --title "Cvičení 1" --seed 42
 
-# Vyplnovani po radcich
+# Vyplňování po řádcích
 python src/main.py --fill across
 
-# Vlastni vystupni soubor
+# Vlastní výstupní soubor
 python src/main.py --out moje_priklady.xlsx
 ```
 
 ### Parametry CLI
 
-| Parametr | Popis | Vychozi hodnota |
+| Parametr | Popis | Výchozí hodnota |
 |----------|-------|-----------------|
-| `-h`, `--help` | Zobrazeni napovedy a ukonceni programu | - |
-| `--ops OPERACE` | Operace k pouziti: '+' (scitani), '-' (odcitani), '*' (nasobeni), '/' (deleni) | `"+-*/"` |
-| `--max CISLO` | Maximalni vysledek prikladu (1-1000) | `20` |
-| `--count CISLO` | Pocet prikladu k vygenerovani (1-500) | `78` |
-| `--cols CISLO` | Pocet sloupcu v rozlozeni (1-10) | `3` |
-| `--fill REZIM` | Zpusob vyplnovani: `down` (po sloupcich) nebo `across` (po radcich) | `"down"` |
-| `--title TEXT` | Titulek zobrazeny v hlavicce listu | `"Matematicke priklady"` |
-| `--seed CISLO` | Seed pro reprodukovatelne generovani (stejne cislo = stejne priklady) | nahodny |
-| `--out SOUBOR` | Nazev vystupniho .xlsx souboru | `"priklady.xlsx"` |
+| `-h`, `--help` | Zobrazení nápovědy a ukončení programu | - |
+| `--ops OPERACE` | Operace k použití: '+' (sčítání), '-' (odčítání), '*' (násobení), '/' (dělení) | `"+-*/"` |
+| `--max CISLO` | Maximální výsledek příkladu (1-1000) | `20` |
+| `--count CISLO` | Počet příkladů k vygenerování (1-500) | `78` |
+| `--cols CISLO` | Počet sloupců v rozvržení (1-10) | `3` |
+| `--fill REZIM` | Způsob vyplňování: `down` (po sloupcích) nebo `across` (po řádcích) | `"down"` |
+| `--title TEXT` | Titulek zobrazený v hlavičce listu | `"Matematické příklady"` |
+| `--seed CISLO` | Seed pro reprodukovatelné generování (stejné číslo = stejné příklady) | náhodný |
+| `--out SOUBOR` | Název výstupního .xlsx souboru | `"priklady.xlsx"` |
 
-## Priklady vystupu
+## Příklady výstupu
 
-Aplikace generuje profesionalne naformatovane Excel soubory s:
-- Citelnym fontem Calibri (velikost 16)
-- Jednotnou sirkou sloupcu (cca 200px)
-- Optimalni vyskou radku (24)
-- Volitelnym titulkem (velikost 18, tucne)
+Aplikace generuje profesionálně naformátované Excel soubory s:
+- Čitelným fontem Courier New (velikost 14, monospace)
+- Jednotnou šířkou sloupců (cca 200px)
+- Optimální výškou řádků (24)
+- Volitelným titulkem (velikost 18, tučně)
+- **Zarovnanými příklady** - všechny "=" jsou v každém sloupci pod sebou
 
-Format prikladu: `a op b = ___`
+Formát příkladu: `a op b = ___`
 
-Priklad:
+Příklad (zarovnané):
 ```
-5 + 3 = ___
-12 - 7 = ___
-4 * 6 = ___
-15 / 3 = ___
+  5 + 3 = ___
+ 12 - 7 = ___
+  4 * 6 = ___
+ 15 / 3 = ___
 ```
 
-## Pozadavky
+## Požadavky
 
 - Python 3.x
-- openpyxl (pro generovani Excel souboru)
-- tkinter (zabudovano v Python, pro GUI)
+- openpyxl (pro generování Excel souborů)
+- tkinter (zabudováno v Pythonu, pro GUI)
+
+## Licence
+
+Tento projekt je licencován pod GNU3 licencí - viz soubor [LICENSE](LICENSE).
+
+## Přispívání
+
+Neváhejte otevřít issue nebo pull request.
