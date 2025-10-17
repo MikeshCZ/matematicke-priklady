@@ -72,7 +72,7 @@ python src/main.py --out moje_priklady.xlsx
 | `-h`, `--help` | Zobrazení nápovědy a ukončení programu | - |
 | `--ops OPERACE` | Operace k použití: '+' (sčítání), '-' (odčítání), '*' (násobení), '/' (dělení) | `"+-*/"` |
 | `--max CISLO` | Maximální výsledek příkladu (1-1000) | `20` |
-| `--count CISLO` | Počet příkladů k vygenerování (1-500) | `78` |
+| `--count CISLO` | Počet příkladů k vygenerování (1-500) | `90` |
 | `--cols CISLO` | Počet sloupců v rozvržení (1-10) | `3` |
 | `--fill REZIM` | Způsob vyplňování: `down` (po sloupcích) nebo `across` (po řádcích) | `"down"` |
 | `--title TEXT` | Titulek zobrazený v hlavičce listu | `"Matematické příklady"` |

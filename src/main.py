@@ -290,9 +290,9 @@ def parse_args():
     p.add_argument(
         "--count",
         type=int,
-        default=78,
+        default=90,
         metavar="CISLO",
-        help="Pocet prikladu k vygenerovani. Rozsah: 1-500. Vychozi: 78",
+        help="Pocet prikladu k vygenerovani. Rozsah: 1-500. Vychozi: 90",
     )
     p.add_argument(
         "--seed",

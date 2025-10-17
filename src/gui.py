@@ -83,7 +83,7 @@ class MathGeneratorGUI:
         ttk.Label(main_frame, text="Počet příkladů:").grid(
             row=row, column=0, sticky=tk.W, pady=(0, 10)
         )
-        self.count = tk.IntVar(value=78)
+        self.count = tk.IntVar(value=90)
         count_spinbox = ttk.Spinbox(
             main_frame, from_=1, to=500, textvariable=self.count, width=20
         )

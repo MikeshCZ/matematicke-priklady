@@ -206,4 +206,7 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
+# Custom ignores
 CLAUDE.md
+priklady.xlsx
+.DS_Store
