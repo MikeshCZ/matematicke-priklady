@@ -1,3 +1,5 @@
+<a href="https://www.buymeacoffee.com/michalsara" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-red.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 # Generátor matematických příkladů
 
 Aplikace pro generování matematických příkladů do Excel souboru. Ideální pro učitele a rodiče, kteří potřebují rychle vytvořit cvičení pro děti.
@@ -151,6 +153,8 @@ Projekt se skládá ze tří hlavních modulů:
 
 Tento projekt je licencován pod GNU3 licencí - viz soubor [LICENSE](LICENSE).
 
-## Přispívání
+## 🧑‍💻 Autor
 
-Neváhejte otevřít issue nebo pull request.
+- [Více o autorovi](https://www.michalsara.cz)
+
+## ☕ Pokud se vám tato repository líbí, můžete **[mi koupit kafe](https://www.buymeacoffee.com/michalsara)**. Díky!
