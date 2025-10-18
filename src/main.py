@@ -9,8 +9,6 @@ S argumentem --gui spouští grafické rozhraní.
 import sys
 import argparse
 
-__version__ = "1.0.0"
-
 def main():
     """Hlavní vstupní funkce."""
     # Kontrola, zda uživatel chce spustit GUI

@@ -7,7 +7,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
 import subprocess
-from cli import generate_sheet
+from cli import generate_sheet, __version__
 
 
 class MathGeneratorGUI:
@@ -21,8 +21,8 @@ class MathGeneratorGUI:
             root: Korenovy tkinter widget
         """
         self.root = root
-        self.root.title("Generátor matematických příkladů")
-        self.root.geometry("600x550")
+        self.root.title(f"Generátor matematických příkladů | v{__version__}")
+        self.root.geometry("600x660")
         self.root.resizable(False, False)
 
         # Vycentrovani okna na obrazovce
@@ -71,15 +71,47 @@ class MathGeneratorGUI:
 
         row += 2
 
-        # Maximalni vysledek
-        ttk.Label(main_frame, text="Maximalní výsledek:").grid(
+        # Maximalni pocet cislic
+        ttk.Label(main_frame, text="Maximální počet číslic:").grid(
             row=row, column=0, sticky=tk.W, pady=(0, 10)
         )
-        self.max_result = tk.IntVar(value=20)
-        max_spinbox = ttk.Spinbox(
-            main_frame, from_=1, to=1000, textvariable=self.max_result, width=20
+        self.max_digits = tk.IntVar(value=2)
+        digits_spinbox = ttk.Spinbox(
+            main_frame, from_=1, to=5, textvariable=self.max_digits, width=20
         )
-        max_spinbox.grid(row=row, column=1, sticky=tk.W, pady=(0, 10))
+        digits_spinbox.grid(row=row, column=1, sticky=tk.W, pady=(0, 10))
+        ttk.Label(
+            main_frame,
+            text="(např. 2 = čísla 0-99, 3 = čísla 0-999)",
+            font=("Arial", 8),
+            foreground="gray"
+        ).grid(row=row+1, column=1, sticky=tk.W, pady=(0, 10))
+        row += 2
+
+        # Maximalni vysledek
+        ttk.Label(main_frame, text="Maximální výsledek:").grid(
+            row=row, column=0, sticky=tk.W, pady=(0, 10)
+        )
+        self.max_result = tk.IntVar(value=0)  # 0 = neomezeno
+        max_result_spinbox = ttk.Spinbox(
+            main_frame, from_=0, to=10000, textvariable=self.max_result, width=20
+        )
+        max_result_spinbox.grid(row=row, column=1, sticky=tk.W, pady=(0, 10))
+        ttk.Label(
+            main_frame,
+            text="(0 = neomezeno, jinak max hodnota výsledku)",
+            font=("Arial", 8),
+            foreground="gray"
+        ).grid(row=row+1, column=1, sticky=tk.W, pady=(0, 10))
+        row += 2
+
+        # Checkbox pro vylouceni nuly
+        self.no_zero = tk.BooleanVar(value=False)
+        ttk.Checkbutton(
+            main_frame,
+            text="Bez nuly (vyloučit číslo 0 z příkladů)",
+            variable=self.no_zero
+        ).grid(row=row, column=0, columnspan=2, sticky=tk.W, pady=(0, 15))
         row += 1
 
         # Pocet prikladu
@@ -219,7 +251,7 @@ class MathGeneratorGUI:
             ops.append("/")
         return ops
 
-    def _validate_inputs(self, ops, max_result, count, cols, output_file):
+    def _validate_inputs(self, ops, max_digits, count, cols, output_file):
         """
         Validuje vstupy od uzivatele.
 
@@ -230,8 +262,8 @@ class MathGeneratorGUI:
             messagebox.showerror("Chyba", "Musíte vybrat alespoň jednu operaci!")
             return False
 
-        if max_result < 1:
-            messagebox.showerror("Chyba", "Maximální výsledek musí být alespoň 1!")
+        if max_digits < 1:
+            messagebox.showerror("Chyba", "Maximální počet číslic musí být alespoň 1!")
             return False
 
         if count < 1:
@@ -264,27 +296,33 @@ class MathGeneratorGUI:
                     return
 
             # Ziskani ostatnich hodnot
+            max_digits = self.max_digits.get()
             max_result = self.max_result.get()
+            # Pokud je max_result 0, bude None (neomezeno)
+            max_result = max_result if max_result > 0 else None
             count = self.count.get()
             cols = self.cols.get()
             fill_mode = self.fill_mode.get()
             title = self.title_text.get()
             output_file = self.output_file.get()
+            no_zero = self.no_zero.get()
 
             # Validace vstupu
-            if not self._validate_inputs(ops, max_result, count, cols, output_file):
+            if not self._validate_inputs(ops, max_digits, count, cols, output_file):
                 return
 
             # Generovani souboru
             file_path = generate_sheet(
                 ops=ops,
-                max_result=max_result,
                 count=count,
                 file_name=output_file,
+                max_result=max_result,
+                max_digits=max_digits,
                 seed=seed_value,
                 title=title if title else None,
                 cols=cols,
-                fill_mode=fill_mode
+                fill_mode=fill_mode,
+                no_zero=no_zero
             )
 
             # Zobrazeni uspesne zpravy

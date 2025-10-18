@@ -7,7 +7,11 @@ Aplikace pro generování matematických příkladů do Excel souboru. Ideální
 ## Funkce
 
 - **Vícero operací**: Sčítání, odčítání, násobení, dělení
-- **Nastavitelná obtížnost**: Maximální výsledek od 1 do 1000
+- **Pokročilá kontrola obtížnosti**:
+  - Maximální počet číslic v číslech (1-5 číslic)
+  - Maximální hodnota výsledku (1-10000)
+  - Možnost kombinovat oba parametry pro přesnou kontrolu
+  - Možnost vyloučit nulu z příkladů
 - **Flexibilní rozvržení**: 1-10 sloupců, vyplňování po sloupcích nebo po řádcích
 - **Reprodukovatelnost**: Volitelný seed pro vytvoření identických listů
 - **Grafické rozhraní**: Intuitivní GUI aplikace
@@ -33,8 +37,10 @@ python src/main.py --gui
 ```
 
 GUI nabízí:
-- Výběr operací pomocí checkboxů
-- Nastavení maximálního výsledku (1-1000)
+- Výběr operací pomocí checkboxů (+, -, ×, ÷)
+- **Maximální počet číslic** (1-5) - omezuje velikost čísel v příkladech
+- **Maximální výsledek** (0-10000) - omezuje maximální hodnotu výsledku (0 = neomezeno)
+- **Bez nuly** - checkbox pro vyloučení čísla 0 z příkladů
 - Počet příkladů (1-500)
 - Počet sloupců (1-10)
 - Způsob vyplňování (po sloupcích/řádcích)
@@ -48,14 +54,26 @@ GUI nabízí:
 # Nápověda - zobrazení všech dostupných argumentů
 python src/main.py --help
 
-# Základní použití (výchozí nastavení)
+# Základní použití (výchozí nastavení: 2 číslice, 90 příkladů, 3 sloupce)
 python src/main.py
 
-# Pouze sčítání a odčítání, max výsledek 10
-python src/main.py --ops "+-" --max 10
+# Příklady s 1 číslicí (čísla 0-9)
+python src/main.py --digits 1
+
+# Pouze sčítání a odčítání, max výsledek 20
+python src/main.py --ops "+-" --max 20
 
 # 50 příkladů s násobením, 2 sloupce
 python src/main.py --ops "*" --count 50 --cols 2
+
+# Čísla max 2 číslice, ale výsledek max 20
+python src/main.py --digits 2 --max 20
+
+# Bez nuly (vyloučit 0 z příkladů)
+python src/main.py --no-zero
+
+# Příklady s 1 číslicí, bez nuly (čísla 1-9)
+python src/main.py --digits 1 --no-zero
 
 # S vlastním titulkem a seedem
 python src/main.py --title "Cvičení 1" --seed 42
@@ -73,13 +91,28 @@ python src/main.py --out moje_priklady.xlsx
 |----------|-------|-----------------|
 | `-h`, `--help` | Zobrazení nápovědy a ukončení programu | - |
 | `--ops OPERACE` | Operace k použití: '+' (sčítání), '-' (odčítání), '*' (násobení), '/' (dělení) | `"+-*/"` |
-| `--max CISLO` | Maximální výsledek příkladu (1-1000) | `20` |
+| `--digits CISLO` | **Maximální počet číslic** v číslech příkladu (1-5). Lze kombinovat s `--max` | `2` |
+| `--max CISLO` | **Maximální výsledek** příkladu (1-10000). Lze kombinovat s `--digits` | není omezeno |
+| `--no-zero` | **Vyloučit nulu** z příkladů (čísla budou pouze 1 a výše) | vypnuto |
 | `--count CISLO` | Počet příkladů k vygenerování (1-500) | `90` |
 | `--cols CISLO` | Počet sloupců v rozvržení (1-10) | `3` |
 | `--fill REZIM` | Způsob vyplňování: `down` (po sloupcích) nebo `across` (po řádcích) | `"down"` |
 | `--title TEXT` | Titulek zobrazený v hlavičce listu | `"Matematické příklady"` |
 | `--seed CISLO` | Seed pro reprodukovatelné generování (stejné číslo = stejné příklady) | náhodný |
 | `--out SOUBOR` | Název výstupního .xlsx souboru | `"priklady.xlsx"` |
+
+#### Jak fungují `--digits` a `--max` společně
+
+- **`--digits`** omezuje **velikost jednotlivých čísel** v příkladu (např. `--digits 2` = čísla 0-99)
+- **`--max`** omezuje **maximální hodnotu výsledku** operace
+- Když jsou zadány oba parametry, platí **přísnější limit** pro každou část příkladu
+- **Všechna čísla** v příkladech (včetně dělence) respektují oba limity
+
+**Příklady kombinací:**
+- `--digits 1` → čísla 0-9
+- `--digits 2 --max 20` → čísla 0-99, ale výsledky ≤ 20
+- `--digits 3 --max 50` → čísla 0-999, ale všechna čísla v příkladu ≤ 50
+- `--max 100` → čísla omezena výsledkem 100
 
 ## Buildování aplikace
 
@@ -142,9 +175,16 @@ Projekt se skládá ze tří hlavních modulů:
 - **Zarovnávací algoritmus**: Příklady v každém sloupci jsou zarovnány doprava přidáním mezer, aby všechny znaky "=" byly pod sebou (využívá monospace font Consolas)
 - **Matematická validita**:
   - Odčítání: vždy `a >= b` pro nezáporné výsledky
+  - Odčítání s `--no-zero`: zajištěn nenulový výsledek (`a >= b + 1`)
   - Dělení: výsledek vždy celé číslo (konstrukce `a = b * c`)
-  - Sčítání/násobení: respektuje `max_result`
+  - Sčítání/násobení/dělení: respektuje `max_result` a `max_digits`
+  - Všechna čísla respektují oba limity (`max_digits` a `max_result`)
 - **Strategie násobení**: Kandidátní přístup pro rovnoměrné rozložení operandů
+- **Pokročilá kontrola obtížnosti**:
+  - `max_digits` omezuje počet číslic v jednotlivých číslech
+  - `max_result` omezuje maximální hodnotu výsledku
+  - Oba parametry lze kombinovat pro přesnou kontrolu
+  - `no_zero` vyloučí nulu ze všech čísel v příkladech
 - **Režimy vyplňování**:
   - `down` - po sloupcích (svisle)
   - `across` - po řádcích (vodorovně)
