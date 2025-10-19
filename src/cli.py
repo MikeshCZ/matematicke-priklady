@@ -10,7 +10,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font
 from openpyxl.utils import get_column_letter
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 
 # ----------------------------
