@@ -12,6 +12,7 @@ Aplikace pro generování matematických příkladů do Excel souboru. Ideální
   - Maximální hodnota výsledku (1-10000)
   - Možnost kombinovat oba parametry pro přesnou kontrolu
   - Možnost vyloučit nulu z příkladů
+  - Možnost vyloučit jedničku z násobení a dělení (zabránění triviálním příkladům typu 5 × 1)
 - **Flexibilní rozvržení**: 1-10 sloupců, vyplňování po sloupcích nebo po řádcích
 - **Reprodukovatelnost**: Volitelný seed pro vytvoření identických listů
 - **Grafické rozhraní**: Intuitivní GUI aplikace
@@ -41,6 +42,7 @@ GUI nabízí:
 - **Maximální počet číslic** (1-5) - omezuje velikost čísel v příkladech
 - **Maximální výsledek** (0-10000) - omezuje maximální hodnotu výsledku (0 = neomezeno)
 - **Bez nuly** - checkbox pro vyloučení čísla 0 z příkladů
+- **Bez jedničky** - checkbox pro vyloučení čísla 1 z násobení a dělení
 - Počet příkladů (1-500)
 - Počet sloupců (1-10)
 - Způsob vyplňování (po sloupcích/řádcích)
@@ -75,6 +77,12 @@ python src/main.py --no-zero
 # Příklady s 1 číslicí, bez nuly (čísla 1-9)
 python src/main.py --digits 1 --no-zero
 
+# Bez jedničky (vyloučit 1 z násobení a dělení)
+python src/main.py --no-one
+
+# Bez nuly a jedničky pro násobení (čísla 2-99)
+python src/main.py --ops "*" --no-zero --no-one
+
 # S vlastním titulkem a seedem
 python src/main.py --title "Cvičení 1" --seed 42
 
@@ -94,6 +102,7 @@ python src/main.py --out moje_priklady.xlsx
 | `--digits CISLO` | **Maximální počet číslic** v číslech příkladu (1-5). Lze kombinovat s `--max` | `2` |
 | `--max CISLO` | **Maximální výsledek** příkladu (1-10000). Lze kombinovat s `--digits` | není omezeno |
 | `--no-zero` | **Vyloučit nulu** z příkladů (čísla budou pouze 1 a výše) | vypnuto |
+| `--no-one` | **Vyloučit jedničku** z násobení a dělení (zabrání triviálním příkladům jako 5 × 1 nebo 6 ÷ 1) | vypnuto |
 | `--count CISLO` | Počet příkladů k vygenerování (1-500) | `90` |
 | `--cols CISLO` | Počet sloupců v rozvržení (1-10) | `3` |
 | `--fill REZIM` | Způsob vyplňování: `down` (po sloupcích) nebo `across` (po řádcích) | `"down"` |
@@ -185,6 +194,7 @@ Projekt se skládá ze tří hlavních modulů:
   - `max_result` omezuje maximální hodnotu výsledku
   - Oba parametry lze kombinovat pro přesnou kontrolu
   - `no_zero` vyloučí nulu ze všech čísel v příkladech
+  - `no_one` vyloučí jedničku z násobení a dělení (zabránění triviálním příkladům)
 - **Režimy vyplňování**:
   - `down` - po sloupcích (svisle)
   - `across` - po řádcích (vodorovně)
