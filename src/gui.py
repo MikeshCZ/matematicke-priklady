@@ -62,7 +62,7 @@ class MathGeneratorGUI:
         ttk.Checkbutton(ops_frame, text="Odčítání (-)", variable=self.op_sub).grid(
             row=0, column=1, sticky=tk.W, padx=(0, 20)
         )
-        ttk.Checkbutton(ops_frame, text="Násobení (x)", variable=self.op_mul).grid(
+        ttk.Checkbutton(ops_frame, text="Násobení (×)", variable=self.op_mul).grid(
             row=1, column=0, sticky=tk.W, padx=(0, 20), pady=(5, 0)
         )
         ttk.Checkbutton(ops_frame, text="Dělení (/)", variable=self.op_div).grid(

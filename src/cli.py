@@ -137,7 +137,7 @@ def gen_mul(max_result=None, max_digits=None, no_zero=False):
 
     for a in range(min_val, max_a + 1):
         if a == 0 and not no_zero:
-            candidates.append((0, "*", 0, 0))
+            candidates.append((0, "×", 0, 0))
             continue
         if a == 0:  # Skip 0 when no_zero
             continue
@@ -146,11 +146,11 @@ def gen_mul(max_result=None, max_digits=None, no_zero=False):
         if max_b < min_val:
             continue
         b = random.randint(min_val, max_b)
-        candidates.append((a, "*", b, a * b))
+        candidates.append((a, "×", b, a * b))
 
     # Fallback pokud nejsou zadne candidates
     if not candidates:
-        return (min_val, "*", min_val, min_val * min_val)
+        return (min_val, "×", min_val, min_val * min_val)
     return random.choice(candidates)
 
 
