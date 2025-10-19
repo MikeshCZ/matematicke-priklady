@@ -125,6 +125,11 @@ python src/main.py --out moje_priklady.xlsx
 
 ## Buildování aplikace
 
+Výsledná aplikace bude v adresáři `dist/`. Build script:
+- Automaticky zkontroluje a nainstaluje PyInstaller
+- Vytvoří GUI aplikaci bez terminálového okna
+- Vytvoří standalone distribuovatelnou aplikaci
+
 ### macOS
 
 Pro vytvoření standalone .app bundle:
@@ -132,11 +137,13 @@ Pro vytvoření standalone .app bundle:
 ```bash
 ./build_scripts/build_mac.sh
 ```
+### Windows
 
-Výsledná aplikace bude v adresáři `dist/`. Build script:
-- Automaticky zkontroluje a nainstaluje PyInstaller
-- Vytvoří GUI aplikaci bez terminálového okna
-- Použije konfiguraci z `gui.spec`
+Pro vytvoření standalone Windows aplikace:
+
+```batch
+build_scripts\build_win.bat
+```
 
 ### Požadavky pro build
 - PyInstaller (`pip install pyinstaller`)
