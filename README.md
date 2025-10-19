@@ -4,6 +4,10 @@
 
 Aplikace pro generování matematických příkladů do Excel souboru. Ideální pro učitele a rodiče, kteří potřebují rychle vytvořit cvičení pro děti.
 
+<p align="center">
+  <img src="img/screenshot.png" alt="Screenshot aplikace">
+</p>
+
 ## Funkce
 
 - **Vícero operací**: Sčítání, odčítání, násobení, dělení
