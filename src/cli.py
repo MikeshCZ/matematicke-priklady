@@ -16,7 +16,7 @@ __version__ = "1.1.1"
 # ----------------------------
 # Generovani prikladu
 # ----------------------------
-def gen_add(max_result=None, max_digits=None, no_zero=False):
+def gen_add(max_result=None, max_digits=None, no_zero=False, no_one=False):
     """
     Generuje priklad na scitani.
 
@@ -24,6 +24,7 @@ def gen_add(max_result=None, max_digits=None, no_zero=False):
         max_result: Maximalni vysledek operace (omezuje vysledek a+b)
         max_digits: Maximalni pocet cislic v cislech (omezuje a a b)
         no_zero: Pokud True, vyloucit nulu z cisel (default: False)
+        no_one: Nepoužíváno pro sčítání (zachováno pro konzistenci API)
 
     Returns:
         Tuple (a, "+", b, vysledek) kde a + b <= max_result
@@ -59,7 +60,7 @@ def gen_add(max_result=None, max_digits=None, no_zero=False):
     return a, "+", b, a + b
 
 
-def gen_sub(max_result=None, max_digits=None, no_zero=False):
+def gen_sub(max_result=None, max_digits=None, no_zero=False, no_one=False):
     """
     Generuje priklad na odcitani.
 
@@ -67,6 +68,7 @@ def gen_sub(max_result=None, max_digits=None, no_zero=False):
         max_result: Maximalni hodnota mensence (omezuje a)
         max_digits: Maximalni pocet cislic v cislech (omezuje a a b)
         no_zero: Pokud True, vyloucit nulu z cisel a vysledku (default: False)
+        no_one: Nepoužíváno pro odčítání (zachováno pro konzistenci API)
 
     Returns:
         Tuple (a, "-", b, vysledek) kde a >= b (nezaporne vysledky)
@@ -98,7 +100,7 @@ def gen_sub(max_result=None, max_digits=None, no_zero=False):
     return a, "-", b, a - b
 
 
-def gen_mul(max_result=None, max_digits=None, no_zero=False):
+def gen_mul(max_result=None, max_digits=None, no_zero=False, no_one=False):
     """
     Generuje priklad na nasobeni.
 
@@ -106,6 +108,7 @@ def gen_mul(max_result=None, max_digits=None, no_zero=False):
         max_result: Maximalni vysledek operace (omezuje vysledek a*b)
         max_digits: Maximalni pocet cislic v cislech (omezuje a a b)
         no_zero: Pokud True, vyloucit nulu z cisel (default: False)
+        no_one: Pokud True, vyloucit jednicku z cisel (default: False)
 
     Returns:
         Tuple (a, "*", b, vysledek) kde a * b <= max_result
@@ -128,7 +131,14 @@ def gen_mul(max_result=None, max_digits=None, no_zero=False):
     elif max_result is None:
         max_result = max_number * max_number  # soucin dvou max cisel
 
-    min_val = 1 if no_zero else 0
+    # Urceni min_val na zaklade no_zero a no_one
+    if no_one:
+        min_val = 2  # vyloucit 0 a 1
+    elif no_zero:
+        min_val = 1  # vyloucit pouze 0
+    else:
+        min_val = 0  # povolit vse
+
     candidates = []
     max_a = min(max_number, max_result)
     # Zajistit, ze max_a je alespon min_val
@@ -139,13 +149,22 @@ def gen_mul(max_result=None, max_digits=None, no_zero=False):
         if a == 0 and not no_zero:
             candidates.append((0, "×", 0, 0))
             continue
-        if a == 0:  # Skip 0 when no_zero
+        if a == 0 and no_zero:  # Skip 0 when no_zero
+            continue
+        if a == 1 and no_one:  # Skip 1 when no_one
             continue
         max_b = max_result // a
         max_b = min(max_b, max_number)  # omezit i b podle max_number
-        if max_b < min_val:
+        # Urceni min_b na zaklade no_zero a no_one
+        if no_one:
+            min_b = 2
+        elif no_zero:
+            min_b = 1
+        else:
+            min_b = 0
+        if max_b < min_b:
             continue
-        b = random.randint(min_val, max_b)
+        b = random.randint(min_b, max_b)
         candidates.append((a, "×", b, a * b))
 
     # Fallback pokud nejsou zadne candidates
@@ -154,7 +173,7 @@ def gen_mul(max_result=None, max_digits=None, no_zero=False):
     return random.choice(candidates)
 
 
-def gen_div(max_result=None, max_digits=None, no_zero=False):
+def gen_div(max_result=None, max_digits=None, no_zero=False, no_one=False):
     """
     Generuje priklad na deleni.
 
@@ -162,6 +181,7 @@ def gen_div(max_result=None, max_digits=None, no_zero=False):
         max_result: Maximalni hodnota vysledku (omezuje vysledek a/b)
         max_digits: Maximalni pocet cislic v cislech (omezuje a a b)
         no_zero: Pokud True, vyloucit nulu z cisel (default: False)
+        no_one: Pokud True, vyloucit jednicku z delitele (default: False)
 
     Returns:
         Tuple (a, "/", b, vysledek) kde a / b = cely vysledek bez zbytku
@@ -184,12 +204,16 @@ def gen_div(max_result=None, max_digits=None, no_zero=False):
     elif max_result is None:
         max_result = max_number
 
+    # Urceni min_b (delitel) na zaklade no_one
+    min_b = 2 if no_one else 1
+
     if max_result <= 0:
-        return 1, "/", 1, 1 if no_zero else (0, "/", 1, 0)
+        return min_b, "/", min_b, 1 if no_zero else (0, "/", min_b, 0)
 
     min_val = 1 if no_zero else 0
     c = random.randint(min_val, min(max_number, max_result))  # vysledek
-    b = random.randint(1, min(max_number, max(1, max_result)))  # delitel (nikdy nula)
+    # delitel musi respektovat min_b (1 nebo 2 podle no_one)
+    b = random.randint(min_b, min(max_number, max(min_b, max_result)))  # delitel
     a = b * c  # delenec
 
     # Kontrola: pokud a prekracuje max_number nebo max_result, musime upravit b nebo c
@@ -199,11 +223,12 @@ def gen_div(max_result=None, max_digits=None, no_zero=False):
         # Zkusime najit validni kombinaci b a c
         # a = b * c, tedy b <= max_a / c
         max_b_allowed = max_a // c if c > 0 else max_a
-        if max_b_allowed < 1:
+        # b musi respektovat min_b
+        if max_b_allowed < min_b:
             # c je prilis velke, zkusime mensi c
-            c = random.randint(min_val, min(max_number, max_result, max_a // 2))
-            max_b_allowed = max_a // c if c > 0 else 1
-        b = random.randint(1, min(max_number, max_b_allowed, max_result))
+            c = random.randint(min_val, min(max_number, max_result, max_a // min_b))
+            max_b_allowed = max_a // c if c > 0 else min_b
+        b = random.randint(min_b, min(max_number, max_b_allowed, max_result))
         a = b * c
 
     return a, "/", b, c
@@ -221,7 +246,7 @@ GEN_MAP = {
 }
 
 
-def make_problem_text(ops, max_result=None, max_digits=None, no_zero=False):
+def make_problem_text(ops, max_result=None, max_digits=None, no_zero=False, no_one=False):
     """
     Vytvori textovou reprezentaci prikladu.
 
@@ -230,12 +255,13 @@ def make_problem_text(ops, max_result=None, max_digits=None, no_zero=False):
         max_result: Maximalni vysledek pro generovani (deprecated)
         max_digits: Maximalni pocet cislic v cislech (doporuceno)
         no_zero: Pokud True, vyloucit nulu z cisel (default: False)
+        no_one: Pokud True, vyloucit jednicku z nasobeni/deleni (default: False)
 
     Returns:
         String ve formatu "a op b = ___"
     """
     op_key = random.choice(ops)
-    a, op_sym, b, _ = GEN_MAP[op_key](max_result=max_result, max_digits=max_digits, no_zero=no_zero)
+    a, op_sym, b, _ = GEN_MAP[op_key](max_result=max_result, max_digits=max_digits, no_zero=no_zero, no_one=no_one)
     return f"{a} {op_sym} {b} = ___"
 
 
@@ -243,7 +269,7 @@ def make_problem_text(ops, max_result=None, max_digits=None, no_zero=False):
 # Generovani Excel listu
 # ----------------------------
 def generate_sheet(
-    ops, count, file_name, max_result=None, max_digits=None, seed=None, title=None, cols=2, fill_mode="down", no_zero=False
+    ops, count, file_name, max_result=None, max_digits=None, seed=None, title=None, cols=2, fill_mode="down", no_zero=False, no_one=False
 ):
     """
     Hlavni funkce pro generovani Excel souboru s priklady.
@@ -259,6 +285,7 @@ def generate_sheet(
         cols: Pocet sloupcu v rozlozeni (default: 2)
         fill_mode: Zpusob vyplnovani "down" (po sloupcich) nebo "across" (po radcich)
         no_zero: Pokud True, vyloucit nulu z cisel (default: False)
+        no_one: Pokud True, vyloucit jednicku z nasobeni/deleni (default: False)
 
     Returns:
         Cesta k vytvorenememu souboru
@@ -296,7 +323,7 @@ def generate_sheet(
         start_row += 2
 
     # Vygenerovani vsech prikladu najednou
-    problems = [make_problem_text(ops, max_result=max_result, max_digits=max_digits, no_zero=no_zero) for _ in range(count)]
+    problems = [make_problem_text(ops, max_result=max_result, max_digits=max_digits, no_zero=no_zero, no_one=no_one) for _ in range(count)]
 
     # Validace fill_mode
     if fill_mode not in ("down", "across"):
@@ -472,6 +499,11 @@ def parse_args():
         action="store_true",
         help="Vyloucit cislo 0 z prikladu (cisla budou pouze 1 a vyse)",
     )
+    p.add_argument(
+        "--no-one",
+        action="store_true",
+        help="Vyloucit cislo 1 z nasobeni a deleni (napr. zabrany priklady jako 5 × 1 nebo 6 ÷ 1)",
+    )
 
     return p.parse_args()
 
@@ -490,6 +522,7 @@ def main():
         cols=args.cols,
         fill_mode=args.fill,
         no_zero=args.no_zero,
+        no_one=args.no_one,
     )
     print(f"Hotovo: {file_path}")
 

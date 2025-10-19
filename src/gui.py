@@ -22,7 +22,7 @@ class MathGeneratorGUI:
         """
         self.root = root
         self.root.title(f"Generátor matematických příkladů | v{__version__}")
-        self.root.geometry("600x660")
+        self.root.geometry("600x690")
         self.root.resizable(False, False)
 
         # Vycentrovani okna na obrazovce
@@ -111,6 +111,15 @@ class MathGeneratorGUI:
             main_frame,
             text="Bez nuly (vyloučit číslo 0 z příkladů)",
             variable=self.no_zero
+        ).grid(row=row, column=0, columnspan=2, sticky=tk.W, pady=(0, 10))
+        row += 1
+
+        # Checkbox pro vylouceni jednicky
+        self.no_one = tk.BooleanVar(value=False)
+        ttk.Checkbutton(
+            main_frame,
+            text="Bez jedničky (vyloučit 1 z násobení a dělení)",
+            variable=self.no_one
         ).grid(row=row, column=0, columnspan=2, sticky=tk.W, pady=(0, 15))
         row += 1
 
@@ -306,6 +315,7 @@ class MathGeneratorGUI:
             title = self.title_text.get()
             output_file = self.output_file.get()
             no_zero = self.no_zero.get()
+            no_one = self.no_one.get()
 
             # Validace vstupu
             if not self._validate_inputs(ops, max_digits, count, cols, output_file):
@@ -322,7 +332,8 @@ class MathGeneratorGUI:
                 title=title if title else None,
                 cols=cols,
                 fill_mode=fill_mode,
-                no_zero=no_zero
+                no_zero=no_zero,
+                no_one=no_one
             )
 
             # Zobrazeni uspesne zpravy
